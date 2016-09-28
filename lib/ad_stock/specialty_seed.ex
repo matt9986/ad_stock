@@ -1,7 +1,7 @@
 defmodule AdStock.SpecialtySeed do
 
   @specialty_ids [56,84,95,87,82,112,43,55,63,86]
-  @sales_region_ids [2302,3331,3330,3329,3333,3332]
+  @sales_region_ids [3329]
   
   @specialties_base_url "http://solicitorstag.corp.avvo.com/api/2/specialties/"
 
