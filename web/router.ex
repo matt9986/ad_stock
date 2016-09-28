@@ -25,5 +25,6 @@ defmodule AdStock.Router do
     get "/ping", PingController, :index
     resources "/lawyers", LawyerController, only: [:index, :show]
     resources "/stocks", StockController, only: [:index]
+    resources "/transactions", TransactionController, only: [:index, :show]
   end
 end
