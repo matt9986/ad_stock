@@ -26,6 +26,6 @@ defmodule AdStock.Router do
     resources "/lawyers", LawyerController, only: [:index, :show]
     resources "/stocks", StockController, only: [:index]
     resources "/transactions", TransactionController, only: [:index, :show]
-    resoucess "/impressions", ImpressionController, only: [:update]
+    resources "/impressions", ImpressionController, only: [:update]
   end
 end
