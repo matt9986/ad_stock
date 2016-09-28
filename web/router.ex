@@ -23,5 +23,7 @@ defmodule AdStock.Router do
   scope "/api", AdStock.API do
     pipe_through :api
     get "/ping", PingController, :index
+    resources "/lawyers", LawyerController, only: [:index, :show]
+    resources "/stocks", StockController, only: [:index]
   end
 end
