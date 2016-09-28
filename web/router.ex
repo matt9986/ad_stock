@@ -20,7 +20,8 @@ defmodule AdStock.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", AdStock do
-  #   pipe_through :api
-  # end
+  scope "/api", AdStock.API do
+    pipe_through :api
+    get "/ping", PingController, :index
+  end
 end
