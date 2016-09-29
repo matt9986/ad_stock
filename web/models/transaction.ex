@@ -8,6 +8,8 @@ defmodule AdStock.Transaction do
     field :transaction_type, :string
     field :price, :integer
 
+    belongs_to :stock, AdStock.Stock
+
     timestamps()
   end
 
