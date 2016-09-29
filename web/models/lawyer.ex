@@ -5,6 +5,7 @@ defmodule AdStock.Lawyer do
     field :lawyer_id, :integer
     field :current_balance, :integer
 
+    has_many :lawyer_stocks, AdStock.LawyerStock
     timestamps()
   end
 
