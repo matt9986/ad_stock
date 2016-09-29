@@ -3,6 +3,7 @@ defmodule AdStock.Lawyer do
 
   schema "lawyers" do
     field :lawyer_id, :integer
+    field :name, :string
     field :current_balance, :integer
 
     has_many :lawyer_stocks, AdStock.LawyerStock
