@@ -1,0 +1,9 @@
+<h2><%= @stock.name %></h2>
+
+<h3>$<%= @stock.current_price / 100 %></h3>
+<p>
+  <label>Volume:</label> <%= @stock.total_volume %>
+</p>
+<p>
+the chart goes here
+</p>

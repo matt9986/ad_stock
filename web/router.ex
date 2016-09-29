@@ -17,6 +17,7 @@ defmodule AdStock.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    get "/stocks/:id", StockController, :show
   end
 
   # Other scopes may use custom stacks.
