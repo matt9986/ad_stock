@@ -10,6 +10,7 @@ defmodule AdStock.Stock do
     field :minimum_price, :integer
     field :purchased_volume, :integer
 
+    has_many :transactions, AdStock.Transaction
     timestamps()
   end
 
