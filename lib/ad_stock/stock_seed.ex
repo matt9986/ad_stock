@@ -32,7 +32,7 @@ defmodule AdStock.StockSeed do
 
   def get_history(stock_id) do
     history = Repo.all(from t in "transaction",
-      select: [:price],
+      select: [:price, :inserted_at],
       where: t.stock_id == ^stock_id)
      
   end
