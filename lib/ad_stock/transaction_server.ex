@@ -63,9 +63,15 @@ defmodule AdStock.TransactionServer do
       type: type,
       price: stock.current_price
       })
-    {:ok, transaction} = AdStock.Repo.insert(transaction)
-    AdStock.Endpoint.broadcast("stock:" <> "#{stock.id}", "update", Map.from_struct(transaction) |> Map.drop([:__meta__, :stock, :lawyer]))
-    {:ok, transaction}
+    AdStock.Repo.insert(transaction)
+  end
+
+  def create_broadcast(stock) do
+    message = %{
+      price: stock.current_price,
+      volume: stock.total_volume - stock.purchased_volume
+    }
+    AdStock.Endpoint.broadcast("stock:" <> "#{stock.id}", "update", message)
   end
 
   defp update_stock(type, stock, quantity, state) do
@@ -86,6 +92,7 @@ defmodule AdStock.TransactionServer do
       current_price: new_price,
     }
     {:ok, stock} = AdStock.Stock.changeset(stock, stock_changes) |> AdStock.Repo.update()
+    create_broadcast(stock)
     Map.put(state, stock.id, stock)
   end
 
