@@ -1,4 +1,5 @@
 <%= tag :meta, name: "stock_id", content: @stock.id %>
+<%= tag :meta, name: "current_price", content: @stock.current_price %>
 <meta name="csrf" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
 
 <script>
@@ -26,12 +27,12 @@
 
 <h2><%= @stock.name %></h2>
 <a href="/">Back</a>
-<h3>$<%= @stock.current_price / 100 %></h3>
+<h3 name="currentStockPrice">$<%= @stock.current_price / 100 %></h3>
   <label>Quantity</label>
   <input type="text" name="quantity" id="quantity"/>
   <input type="submit" value="Buy" onClick="purchaseStock();"/>
 <p>
-  <label>Volume:</label> <%= @stock.total_volume %>
+<label>Volume:</label> <span><%= @stock.total_volume %></span>
 </p>
 <div id="stock_ticker" style="width:600px;height:250px;">
 </div>

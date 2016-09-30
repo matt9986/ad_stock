@@ -52,27 +52,34 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 // from connect if you don't care about authentication.
 function getMetaContentByName(name,content){
      var content = (content==null)?'content':content;
-        return document.querySelector("meta[name='"+name+"']").getAttribute(content);
+     return document.querySelector("meta[name='"+name+"']").getAttribute(content);
 }
 
 socket.connect()
 
 var stockId = getMetaContentByName("stock_id");
+var currentPrice = getMetaContentByName("current_price");
+var currentStockPriceField = document.querySelector("meta[name='currentStockPrice']");
+console.log(currentStockPriceField);
 // Now that you are connected, you can join channels with a topic:
 let channel = socket.channel("stock:" + stockId, {})
 channel.join()
   .receive("ok", resp => { console.log("Joined successfully", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })
 
-channel.on("history", payload => {
-  var history = payload.history;
+var history = [];
+
+function drawChart(data) {
   var x = [];
   var y = [];
   for(var i = 0; i < history.length; i++) {
     var item = history[i];
     x.push(i);
-    y.push(item.price);
+    y.push(item.price / 100);
   }
+  x.push(history.length);
+  y.push(currentPrice / 100);
+  
   var chartData = {
     x: x,
     y: y,
@@ -80,7 +87,17 @@ channel.on("history", payload => {
   };
 
   Plotly.newPlot('stock_ticker', [chartData]);
- 
+  
+}
+
+channel.on("history", payload => {
+  history = payload.history;
+  drawChart(history);
+});
+
+channel.on("update", payload => {
+  history.push({price: payload.price});
+  drawChart(history);
 });
 
 export default socket
