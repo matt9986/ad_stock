@@ -62,11 +62,17 @@ defmodule AdStock.TransactionServer do
         "view" -> @stock_view_price_change
       end
 
+    new_price = if stock.current_price + price_change < stock.minimum_price do
+      stock.current_price + price_change
+    else
+      stock.minimum_price
+    end
+
     stock_changes = %{
       purchased_volume: stock.purchased_volume + quantity,
-      current_price: stock.current_price + price_change,
+      current_price: new_price,
     }
-    {:ok, stock} = AdStock.Repo.update(AdStock.Stock.changeset(stock, stock_changes))
+    {:ok, stock} = AdStock.Stock.changeset(stock, stock_changes) |> AdStock.Repo.update()
     transaction = Ecto.build_assoc(stock, :transactions, %{
       volume: stock.total_volume - stock.purchased_volume,
       quantity: quantity,
