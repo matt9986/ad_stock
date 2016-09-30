@@ -6,8 +6,8 @@ defmodule AdStock.TransactionServer do
   @view_impression_stock_quantity  1
   @stock_purchase_quantity         10
 
-  @stock_purchase_price_change 10
-  @stock_click_price_change    30
+  @stock_purchase_price_change 5
+  @stock_click_price_change    10
   @stock_view_price_change     -1
 
   def start_link(_) do
@@ -57,12 +57,13 @@ defmodule AdStock.TransactionServer do
   defp create_transaction(type, stock, quantity) do
     price_change =
       case type do
-        :purchase -> @stock_purchase_price_change
-        :click -> @stock_click_price_change
-        :view -> @stock_view_price_change
+        :purchase -> @stock_purchase_price_change * quantity
+        :click -> @stock_click_price_change * quantity
+        :view -> @stock_view_price_change * quantity
       end
 
-    new_price = if stock.current_price + price_change < stock.minimum_price do
+    old_price = stock.current_price
+    new_price = if old_price + price_change < stock.minimum_price do
       stock.current_price + price_change
     else
       stock.minimum_price
@@ -77,7 +78,7 @@ defmodule AdStock.TransactionServer do
       volume: stock.total_volume - stock.purchased_volume,
       quantity: quantity,
       type: type,
-      price: stock.current_price
+      price: old_price
       })
     AdStock.Repo.insert(transaction)
   end
