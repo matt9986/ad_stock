@@ -7,6 +7,8 @@ defmodule AdStock.StockSeed do
   alias AdStock.Specialty
   alias AdStock.Repo
 
+  import Ecto.Query
+
   def run() do
     Repo.delete_all(Stock)
     specialties = Repo.all(Specialty)
@@ -26,5 +28,12 @@ defmodule AdStock.StockSeed do
       }
       Repo.insert!(stock)
     end)
+  end
+
+  def get_history(stock_id) do
+    history = Repo.all(from t in "transaction",
+      select: [:price, :inserted_at],
+      where: t.stock_id == ^stock_id)
+     
   end
 end
