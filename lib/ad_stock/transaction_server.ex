@@ -80,7 +80,9 @@ defmodule AdStock.TransactionServer do
       type: type,
       price: old_price
       })
-    AdStock.Repo.insert(transaction)
+    result = AdStock.Repo.insert(transaction)
+    AdStock.Endpoint.broadcast("stock:" <> "#{stock.id}", "update", Map.from_struct(transaction) |> Map.drop([:__meta__, :stock, :lawyer]))
+    result
   end
 
   defp dock_impression(lawyer_id, stock, quantity) do

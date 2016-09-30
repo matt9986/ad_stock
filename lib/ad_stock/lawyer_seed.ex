@@ -9,7 +9,7 @@ defmodule AdStock.LawyerSeed do
   def run() do
     Repo.delete_all(Lawyer)
     Enum.each(Enum.with_index(@lawyer_names), fn({name, id}) ->
-      %Lawyer{lawyer_id: id, name: name, current_balance: 0}
+      %Lawyer{lawyer_id: id, name: name, current_balance: 1000}
       |> Lawyer.changeset
       |> Repo.insert!
     end)
