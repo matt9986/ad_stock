@@ -75,11 +75,12 @@ defmodule AdStock.TransactionServer do
         :click -> @stock_click_price_change * quantity
         :view -> @stock_view_price_change * quantity
       end
-    new_price = if stock.current_price + price_change < stock.minimum_price do
+    new_price = if stock.current_price + price_change > stock.minimum_price do
       stock.current_price + price_change
     else
       stock.minimum_price
     end
+    IO.inspect({price_change, new_price})
     stock_changes = %{
       purchased_volume: stock.purchased_volume + quantity,
       current_price: new_price,
