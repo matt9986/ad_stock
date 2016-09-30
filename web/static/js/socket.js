@@ -96,7 +96,7 @@ channel.on("update", payload => {
   history.push({price: payload.price});
   drawChart(history);
   var currentStockPriceField = $("h3");
-  currentStockPriceField.text("$" + payload.price / 100);
+  currentStockPriceField.text("$" + (payload.price / 100).to_fixed(2));
   var currentVolume = $("#currentVolume");
   currentVolume.text(payload.volume);
 });
