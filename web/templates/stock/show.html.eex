@@ -1,13 +1,35 @@
 <%= tag :meta, name: "stock_id", content: @stock.id %>
+<meta name="csrf" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
+
+<script>
+  function purchaseStock() {
+    var quantityField = $("input[name='quantity']");
+    var quantity = quantityField[0].value;
+    var csrf = document.querySelector("meta[name=csrf]").content;
+    var stockId = parseInt(document.querySelector("meta[name=stock_id]").content);
+    $.ajax({
+      url: "/api/purchase",
+      type: "post", 
+      data: {
+        stock_id: parseInt(stockId),
+        quantity: parseInt(quantity),
+        lawyer_id: 21
+      },
+      dataType: "json",
+      success: function(data) {
+        console.log(data);
+      }
+    });
+    return false;
+  }
+</script>
 
 <h2><%= @stock.name %></h2>
 <a href="/">Back</a>
 <h3>$<%= @stock.current_price / 100 %></h3>
-<form action="">
   <label>Quantity</label>
-  <input type="text" />
-  <input type="submit" value="Buy" />
-</form>
+  <input type="text" name="quantity" id="quantity"/>
+  <input type="submit" value="Buy" onClick="purchaseStock();"/>
 <p>
   <label>Volume:</label> <%= @stock.total_volume %>
 </p>
