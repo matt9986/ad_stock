@@ -14,7 +14,7 @@ defmodule AdStock.StockChannel do
   end
 
   def handle_info({:after_join, stock_id}, socket) do
-    history = StockSeed.get_history(stock_id)
+    history = StockSeed.get_history(stock_id |> String.to_integer)
     push socket, "history", %{"history": history}
     {:noreply, socket}
   end

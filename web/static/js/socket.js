@@ -70,7 +70,7 @@ channel.on("history", payload => {
   var y = [];
   for(var i = 0; i < history.length; i++) {
     var item = history[i];
-    x.push(item.inserted_at);
+    x.push(i);
     y.push(item.price);
   }
   var chartData = {
