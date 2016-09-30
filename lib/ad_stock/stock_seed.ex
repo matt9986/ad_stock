@@ -1,7 +1,7 @@
 defmodule AdStock.StockSeed do
 
   @sales_region_id 3329
-  @quasi_base_url "http://3358b837.ngrok.io/api/v1/ad_inventories?sales_region_id=#{@sales_region_id}&ad_type=SL&specialty_id="
+  @quasi_base_url "http://localhost:5001/api/v1/ad_inventories?sales_region_id=#{@sales_region_id}&ad_type=SL&specialty_id="
 
   alias AdStock.Stock
   alias AdStock.Specialty

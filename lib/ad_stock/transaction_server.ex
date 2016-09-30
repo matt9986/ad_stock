@@ -86,8 +86,18 @@ defmodule AdStock.TransactionServer do
   end
 
   defp dock_impression(lawyer_id, stock, quantity) do
-    lawyer = AdStock.Repo.get!(AdStock.Lawyer, lawyer_id) 
-            |> AdStock.Repo.preload([:lawyer_stocks])
+    AdStock.Repo.get(AdStock.Lawyer, lawyer_id) 
+    |> update_lawyer_stock(stock, quantity)
+  end
+
+  defp update_lawyer_stock(nil, stock, quantity) do
+    AdStock.Repo.all(AdStock.Lawyer) 
+    |> Enum.shuffle
+    |> hd
+    |> update_lawyer_stock(stock, quantity)
+  end
+  defp update_lawyer_stock(lawyer, stock, quantity) do
+    lawyer = lawyer |> AdStock.Repo.preload([:lawyer_stocks])
     lawyer_stock = Enum.find(lawyer.lawyer_stocks, nil, fn(lawyer_stock) -> lawyer_stock.stock_id == stock.id end)
     if lawyer_stock do
       new_quantity = if lawyer_stock.quantity < quantity, do: 0, else: lawyer_stock.quantity - quantity
