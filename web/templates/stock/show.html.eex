@@ -14,7 +14,7 @@
       data: {
         stock_id: parseInt(stockId),
         quantity: parseInt(quantity),
-        lawyer_id: 21
+        lawyer_id: window.localStorage.getItem("signedInLawyerID") || 21
       },
       dataType: "json",
       success: function(data) {

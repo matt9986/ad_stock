@@ -1,4 +1,24 @@
-<h2>Stocks</h2>
-<%= for stock <- @stocks do %>
-  <li><a href="/stocks/<%= stock.id %>"><%= stock.name %></li>
-<% end %>
+<div id="lawyer_sign_in" class="">
+  <h2>Sign In</h2>
+  <select onChange="window.localStorage.setItem('signedInLawyerID', value); $('#lawyer_sign_in').hide(); $('#stock_listing').removeClass('hidden'); false">
+    <option disabled selected value> -- select a login -- </option>
+    <%= for lawyer <- @lawyers do %>
+      <option value="<%= lawyer.id %>"><%= lawyer.name %></option>
+    <% end %>
+  </select>
+</div>
+<div id="stock_listing" class="hidden">
+  <h2>Stocks</h2>
+  <%= for stock <- @stocks do %>
+    <li><a href="/stocks/<%= stock.id %>"><%= stock.name %></li>
+  <% end %>
+  <a href="#" onClick="window.localStorage.removeItem('signedInLawyerID'); $('#lawyer_sign_in').show(); $('#stock_listing').addClass('hidden')">Sign Out</a>
+</div>
+<script type="text/javascript">
+  $().ready(function(){
+    if (window.localStorage.getItem('signedInLawyerID')) {
+      $('#lawyer_sign_in').hide();
+      $('#stock_listing').removeClass('hidden');
+    }
+  })
+</script>
