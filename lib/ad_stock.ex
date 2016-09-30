@@ -12,6 +12,7 @@ defmodule AdStock do
       supervisor(AdStock.Repo, []),
       # Start the endpoint when the application starts
       supervisor(AdStock.Endpoint, []),
+      worker(AdStock.TransactionServer, [nil])
       # Start your own worker by calling: AdStock.Worker.start_link(arg1, arg2, arg3)
       # worker(AdStock.Worker, [arg1, arg2, arg3]),
     ]
