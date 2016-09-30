@@ -3,6 +3,7 @@ defmodule AdStock.UserSocket do
 
   ## Channels
   # channel "room:*", AdStock.RoomChannel
+  channel "stock:*", AdStock.StockChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
