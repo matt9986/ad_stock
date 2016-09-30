@@ -7,8 +7,8 @@ defmodule AdStock.TransactionServer do
   @stock_purchase_quantity         10
 
   @stock_purchase_price_change 5
-  @stock_click_price_change    10
-  @stock_view_price_change     -1
+  @stock_click_price_change    -10
+  @stock_view_price_change     1
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
