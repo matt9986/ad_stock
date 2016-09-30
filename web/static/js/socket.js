@@ -50,13 +50,37 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 //
 // Finally, pass the token on connect as below. Or remove it
 // from connect if you don't care about authentication.
+function getMetaContentByName(name,content){
+     var content = (content==null)?'content':content;
+        return document.querySelector("meta[name='"+name+"']").getAttribute(content);
+}
 
 socket.connect()
 
+var stockId = getMetaContentByName("stock_id");
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {})
+let channel = socket.channel("stock:" + stockId, {})
 channel.join()
   .receive("ok", resp => { console.log("Joined successfully", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })
+
+channel.on("history", payload => {
+  var history = payload.history;
+  var x = [];
+  var y = [];
+  for(var i = 0; i < history.length; i++) {
+    var item = history[i];
+    x.push(item.inserted_at);
+    y.push(item.price);
+  }
+  var chartData = {
+    x: x,
+    y: y,
+    mode: 'lines'
+  };
+
+  Plotly.newPlot('stock_ticker', [chartData]);
+ 
+});
 
 export default socket

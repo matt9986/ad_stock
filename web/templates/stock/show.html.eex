@@ -1,9 +1,15 @@
-<h2><%= @stock.name %></h2>
+<%= tag :meta, name: "stock_id", content: @stock.id %>
 
+<h2><%= @stock.name %></h2>
+<a href="/">Back</a>
 <h3>$<%= @stock.current_price / 100 %></h3>
+<form action="">
+  <label>Quantity</label>
+  <input type="text" />
+  <input type="submit" value="Buy" />
+</form>
 <p>
   <label>Volume:</label> <%= @stock.total_volume %>
 </p>
-<p>
-the chart goes here
-</p>
+<div id="stock_ticker" style="width:600px;height:250px;">
+</div>
