@@ -77,8 +77,6 @@ function drawChart(data) {
     x.push(i);
     y.push(item.price / 100);
   }
-  x.push(history.length);
-  y.push(currentPrice / 100);
   
   var chartData = {
     x: x,
@@ -92,6 +90,7 @@ function drawChart(data) {
 
 channel.on("history", payload => {
   history = payload.history;
+  history.push({price: currentPrice});
   drawChart(history);
 });
 
