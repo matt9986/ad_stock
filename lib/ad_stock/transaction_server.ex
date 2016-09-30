@@ -22,17 +22,17 @@ defmodule AdStock.TransactionServer do
     GenServer.call(__MODULE__, {:impression, [impression_type, stock_id, lawyer_id]})
   end
 
-  def create_purchase(stock_id, lawyer_id, max_price) do
-    GenServer.call(__MODULE__, {:create_purchase, [stock_id, lawyer_id, max_price]})
+  def create_purchase(stock_id, lawyer_id, quantity) do
+    GenServer.call(__MODULE__, {:create_purchase, [stock_id, lawyer_id, quantity]})
   end
 
-  def handle_call({:create_purchase, [stock_id, lawyer_id, max_price]}, _from, state) do
+  def handle_call({:create_purchase, [stock_id, lawyer_id, quantity]}, _from, state) do
     {state, stock} = find_stock(state, stock_id)
     lawyer = AdStock.Repo.get!(AdStock.Lawyer, lawyer_id)
     response = 
-      if stock.current_price < max_price && stock.current_price < lawyer.current_balance do
-        {:ok, [lawyer_stock, quantity]} = purchase_stock(stock, lawyer)
-        {:ok, transaction} = create_transaction("purchase", stock, quantity)
+      if stock.current_price * (quantity / @stock_purchase_quantity) < lawyer.current_balance do
+        {:ok, [lawyer_stock, quantity]} = purchase_stock(stock, lawyer, quantity)
+        {:ok, transaction} = create_transaction(:purchase, stock, quantity)
         {:ok, lawyer_stock}
       else
         {:error, "Insufficient balance or max price exceeded"}
@@ -45,8 +45,8 @@ defmodule AdStock.TransactionServer do
 
     quantity =
       case type do
-        "click" -> @click_impression_stock_quantity
-        "view" -> @view_impression_stock_quantity
+        :click -> @click_impression_stock_quantity
+        :view -> @view_impression_stock_quantity
       end
 
     dock_impression(lawyer_id, stock, quantity)
@@ -57,9 +57,9 @@ defmodule AdStock.TransactionServer do
   defp create_transaction(type, stock, quantity) do
     price_change =
       case type do
-        "purchase" -> @stock_purchase_price_change
-        "click" -> @stock_click_price_change
-        "view" -> @stock_view_price_change
+        :purchase -> @stock_purchase_price_change
+        :click -> @stock_click_price_change
+        :view -> @stock_view_price_change
       end
 
     new_price = if stock.current_price + price_change < stock.minimum_price do
@@ -93,12 +93,16 @@ defmodule AdStock.TransactionServer do
     :ok
   end
 
-  defp purchase_stock(stock, lawyer) do
+  defp purchase_stock(stock, lawyer, quantity) do
     lawyer = AdStock.Repo.preload(lawyer, [:lawyer_stocks])
     lawyer_stock = Enum.find(lawyer.lawyer_stocks, nil, fn(lawyer_stock) -> lawyer_stock.stock_id == stock.id end)
 
-    {:ok, lawyer_stock} = change_lawyer_stock_quantity(lawyer_stock, lawyer, stock, @stock_purchase_quantity)
-    {:ok, [lawyer_stock, @stock_purchase_quantity]}
+    cost = stock.current_price * (quantity / @stock_purchase_quantity)
+    AdStock.Lawyer.changeset(lawyer, %{current_balance: lawyer.current_balance - cost})
+    |> AdStock.Repo.update()
+
+    {:ok, lawyer_stock} = change_lawyer_stock_quantity(lawyer_stock, lawyer, stock, quantity)
+    {:ok, [lawyer_stock, quantity]}
   end
 
   @spec change_lawyer_stock_quantity(%AdStock.LawyerStock{}, %AdStock.Lawyer{}, %AdStock.Stock{}, integer) :: {:ok, %AdStock.LawyerStock{}}
