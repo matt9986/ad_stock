@@ -32,7 +32,7 @@
   <input type="text" name="quantity" id="quantity"/>
   <input type="submit" value="Buy" onClick="purchaseStock();"/>
 <p>
-<label>Volume:</label> <span><%= @stock.total_volume %></span>
+<label>Volume:</label> <span id="currentVolume"><%= @stock.total_volume - @stock.purchased_volume %></span>
 </p>
 <div id="stock_ticker" style="width:600px;height:250px;">
 </div>

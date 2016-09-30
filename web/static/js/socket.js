@@ -97,6 +97,8 @@ channel.on("update", payload => {
   drawChart(history);
   var currentStockPriceField = $("h3");
   currentStockPriceField.text("$" + payload.price / 100);
+  var currentVolume = $("#currentVolume");
+  currentVolume.text(payload.volume);
 });
 
 export default socket
