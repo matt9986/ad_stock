@@ -27,7 +27,7 @@
 
 <h2><%= @stock.name %></h2>
 <a href="/">Back</a>
-<h3 name="currentStockPrice">$<%= @stock.current_price / 100 %></h3>
+<h3 id="currentStockPrice">$<%= @stock.current_price / 100 %></h3>
   <label>Quantity</label>
   <input type="text" name="quantity" id="quantity"/>
   <input type="submit" value="Buy" onClick="purchaseStock();"/>

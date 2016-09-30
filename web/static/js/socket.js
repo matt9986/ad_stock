@@ -59,8 +59,6 @@ socket.connect()
 
 var stockId = getMetaContentByName("stock_id");
 var currentPrice = getMetaContentByName("current_price");
-var currentStockPriceField = document.querySelector("meta[name='currentStockPrice']");
-console.log(currentStockPriceField);
 // Now that you are connected, you can join channels with a topic:
 let channel = socket.channel("stock:" + stockId, {})
 channel.join()
@@ -97,6 +95,8 @@ channel.on("history", payload => {
 channel.on("update", payload => {
   history.push({price: payload.price});
   drawChart(history);
+  var currentStockPriceField = $("h3");
+  currentStockPriceField.text("$" + payload.price / 100);
 });
 
 export default socket
