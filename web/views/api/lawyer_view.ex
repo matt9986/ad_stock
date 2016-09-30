@@ -14,6 +14,7 @@ defmodule AdStock.API.LawyerView do
   def render("lawyer.json", %{lawyer: lawyer}) do
     %{
       id: lawyer.id,
+      name: lawyer.name,
       current_balance: lawyer.current_balance,
       updated_at: lawyer.updated_at,
     }
